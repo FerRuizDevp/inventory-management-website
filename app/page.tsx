@@ -1,14 +1,24 @@
-import Link from "next/link";
-/*import { stackServerApp } from "@/stack/server";*/
-import { redirect } from "next/navigation";
+import { auth } from '@/lib/auth/server';
+import Link from 'next/link';
+
+// Server components using auth methods must be rendered dynamically
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const user = await stackServerApp.getUser();
-  if (user) {
-    redirect("/dashboard");
+  const { data: session } = await auth.getSession();
+
+  if (session?.user) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+        <h1 className="mb-4 text-4xl">
+          Logged in as <span className="font-bold underline">{session.user.name}</span>
+        </h1>
+      </div>
+    );
   }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+    <div className="min-h-screen bg-linear-to-br from-purple-50 to-purple-100 flex items-center justify-center">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
@@ -19,9 +29,15 @@ export default async function Home() {
             management system. Track products, monitor stock levels, and gain
             valuable insights.
           </p>
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-2 justify-center">
             <Link
-              href="/sign-in"
+              href="/auth/sign-up"
+              className="bg-purple-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-900 transition-colors"
+            >
+              Sign Up
+            </Link>
+            <Link
+              href="/auth/sign-in"
               className="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
             >
               Sign In
@@ -38,3 +54,7 @@ export default async function Home() {
     </div>
   );
 }
+
+// ** This page is a server component that checks if the user is logged in using the auth library. If the user is logged in, it displays their name. If not, it shows a landing page with options to sign up, sign in, or learn more about the inventory management system.
+
+// ** TO-DO: Adaprt the Sign-up and Sign-in pages to have the same styling as the landing page. 
