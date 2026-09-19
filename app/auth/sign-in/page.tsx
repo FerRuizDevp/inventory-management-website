@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { signInWithEmail } from './actions';
+import SocialButtons from '../social-buttons';
 
 export default function SignInForm() {
   const [state, formAction, isPending] = useActionState(signInWithEmail, null);
@@ -36,6 +37,7 @@ export default function SignInForm() {
         className="flex w-sm justify-center rounded-md bg-purple-600 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-purple-400">
         Sign in
       </button>
+      <SocialButtons />
     </form>
   );
 }

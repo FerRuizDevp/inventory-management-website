@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { signUpWithEmail } from './actions';
+import SocialButtons from '../social-buttons';
 
 export default function SignUpForm() {
   const [state, formAction, isPending] = useActionState(signUpWithEmail, null);
@@ -43,6 +44,7 @@ export default function SignUpForm() {
         className="flex w-sm justify-center rounded-md bg-purple-800 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-purple-600">
         {isPending ? 'Creating account...' : 'Create Account'}
       </button>
+      <SocialButtons />
     </form>
   );
 }
