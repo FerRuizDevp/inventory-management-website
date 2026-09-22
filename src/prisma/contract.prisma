@@ -6,8 +6,8 @@ model User {
   username  String?
   name      String?
   posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
 }
 
 model Post {
@@ -16,6 +16,21 @@ model Post {
   content   String?
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+  createdAt DateTime @default(now())
+  updatedAt temporal.updatedAt()
+}
+
+model Product {
+  id         String @id @default(uuid())
+  userId     String
+  name       String
+  sku        String? @unique
+  price      Numeric(12,2)
+  quantity   Int @default(0)
+  lowStockAt Int?
+  createdAt  DateTime @default(now())
+  updatedAt  temporal.updatedAt()
+
+  @@index([userId, name])
+  @@index([createdAt])
 }
