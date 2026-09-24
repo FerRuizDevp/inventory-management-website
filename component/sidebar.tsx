@@ -16,7 +16,7 @@ export default function Sidebar({
     ];
 
     return (
-        <div className="fixed top-0 left-0 min-h-screen w-65 text-white bg-purple-950 p-6 z-10"> 
+        <div className="fixed top-0 left-0 min-h-screen w-65 text-white bg-violet-950 p-6 z-10"> 
             <div className="mb-8">
                 <div className="flex items-center space-x-2 mb-4">  
                     <CirclePile className="w-6 h-6" />
@@ -32,7 +32,7 @@ export default function Sidebar({
                             href={item.href}
                             key={key}
                             className={`flex items-center space-x-3 py-2 px-3 rounded-lg ${
-                                isActive ? "bg-purple-100 text-purple-950" : "hover:bg-purple-800 text-gray-300"
+                                isActive ? "bg-violet-100 text-violet-950" : "hover:bg-violet-800 text-gray-300"
                             }`}
                         >
                             <Iconcomponent className="w-5 h-5" />
@@ -42,9 +42,9 @@ export default function Sidebar({
                 })}
             </nav>
 
-            <div className="absolute bottom-0 left-0 right-0 p-6 border-t-2 border-purple-400">
+            <div className="absolute bottom-0 left-0 right-0 p-6 border-t-2 border-violet-400">
                 <div className="flex items-center justify-center">
-                    <UserButton className="text-gray-300 bg-purple-950 hover:bg-purple-800" />
+                    <UserButton className="text-gray-300 bg-violet-950 hover:bg-violet-800" />
                 </div>
             </div>
 
