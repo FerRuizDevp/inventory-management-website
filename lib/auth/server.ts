@@ -9,3 +9,8 @@ export const auth = createNeonAuth({
   // logLevel: 'silent', // disable Managed Better Auth logging
   // logLevel: 'debug',  // verbose proxy/upstream logging
 });
+
+export async function getCurrentUser() {
+    const { data: session } = await auth.getSession();
+    return session?.user ?? null;
+}

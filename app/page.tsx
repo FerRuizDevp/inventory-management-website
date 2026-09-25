@@ -9,8 +9,8 @@ export default async function Home() {
 
   if (session?.user) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-50 to-purple-100 flex items-center justify-center">
-        <h1 className="mb-4 text-4xl">
+      <div className="min-h-screen bg-linear-to-br from-violet-50 to-violet-100 flex items-center justify-center">
+        <h1 className="mb-4 text-4xl text-violet-950">
           Logged in as <span className="font-bold underline">{session.user.name}</span>
         </h1>
       </div>
@@ -18,7 +18,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-50 to-purple-100 flex items-center justify-center">
+    <div className="min-h-screen bg-linear-to-br from-violet-50 to-violet-100 flex items-center justify-center">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
@@ -32,19 +32,19 @@ export default async function Home() {
           <div className="flex gap-2 justify-center">
             <Link
               href="/auth/sign-up"
-              className="bg-purple-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-900 transition-colors"
+              className="bg-violet-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-violet-900 transition-colors"
             >
               Sign Up
             </Link>
             <Link
               href="/auth/sign-in"
-              className="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+              className="bg-violet-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-violet-700 transition-colors"
             >
               Sign In
             </Link>
             <Link
               href="#"
-              className="bg-white text-purple-600 px-8 py-3 rounded-lg font-semibold border-2 border-purple-600 hover:bg-purple-50 transition-colors"
+              className="bg-white text-violet-600 px-8 py-3 rounded-lg font-semibold border-2 border-violet-600 hover:bg-violet-50 transition-colors"
             >
               Learn More
             </Link>
