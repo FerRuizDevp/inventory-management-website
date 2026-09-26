@@ -2,6 +2,29 @@ import { getCurrentUser } from "@/lib/auth/server";
 import { db } from "@/src/prisma/db";
 import { TrendingUp } from "lucide-react";
 
+function ProductsChart({ data }: { data: { label: string; value: number }[] }) {
+  const maxValue = Math.max(...data.map((point) => point.value), 1);
+
+  return (
+    <div className="flex h-full items-end gap-3">
+      {data.map((point) => (
+        <div
+          key={point.label}
+          className="flex flex-1 flex-col items-center gap-2"
+        >
+          <div className="flex h-32 w-full items-end justify-center">
+            <div
+              className="w-full rounded-t-md bg-violet-500"
+              style={{ height: `${(point.value / maxValue) * 100}%` }}
+            />
+          </div>
+          <span className="text-xs text-gray-500">{point.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const userId = user!.id; // layout guarantees this exists
@@ -20,12 +43,18 @@ export default async function DashboardPage() {
       .all(),
 
     ProductModel.where((p: any) => p.userId.eq(userId))
-      .select("price", "quantity", "createdAt")
+      .select("name", "price", "quantity", "createdAt", "lowStockAt")
       .all(),
   ]);
 
   const totalProducts = totalProductsRows.length;
   const lowStock = lowStockRows.length;
+  const recent = [...allProducts]
+    .sort(
+      (a: any, b: any) =>
+        Number(new Date(b.createdAt || 0)) - Number(new Date(a.createdAt || 0)),
+    )
+    .slice(0, 5);
 
   const totalValue = allProducts.reduce(
     (
@@ -37,6 +66,55 @@ export default async function DashboardPage() {
     ) => sum + Number(product.price) * Number(product.quantity),
     0,
   );
+
+  const weeklyProductsData = Array.from({ length: 6 }, (_, index) => {
+    const now = new Date();
+    const labelDate = new Date(now);
+    labelDate.setDate(now.getDate() - (5 - index) * 7);
+
+    const label = labelDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+    const value = allProducts.filter((product: any) => {
+      const createdAt = product.createdAt ? new Date(product.createdAt) : null;
+      if (!createdAt) return false;
+
+      const start = new Date(labelDate);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(labelDate);
+      end.setDate(end.getDate() + 7);
+      end.setHours(23, 59, 59, 999);
+
+      return createdAt >= start && createdAt <= end;
+    }).length;
+
+    return { label, value };
+  });
+
+  const inStockCount = allProducts.filter(
+    (product: any) =>
+      Number(product.quantity) > 0 &&
+      Number(product.quantity) > Number(product.lowStockAt || 5),
+  ).length;
+  const lowStockCount = allProducts.filter(
+    (product: any) =>
+      Number(product.quantity) > 0 &&
+      Number(product.quantity) <= Number(product.lowStockAt || 5),
+  ).length;
+  const outOfStockCount = allProducts.filter(
+    (product: any) => Number(product.quantity) === 0,
+  ).length;
+
+  const inStockPercentage = totalProducts
+    ? Math.round((inStockCount / totalProducts) * 100)
+    : 0;
+  const lowStockPercentage = totalProducts
+    ? Math.round((lowStockCount / totalProducts) * 100)
+    : 0;
+  const outOfStockPercentage = totalProducts
+    ? Math.round((outOfStockCount / totalProducts) * 100)
+    : 0;
 
   return (
     <div>
@@ -96,6 +174,116 @@ export default async function DashboardPage() {
                 <div className="flex items-center justify-center mt-1">
                   <span className="text-xs text-green-600">+{lowStock}</span>
                   <TrendingUp className="w-3 h-3 text-green-600 ml-1" />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Inventory over time */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                New products per week
+              </h2>
+            </div>
+            <div className="h-48">
+              <ProductsChart data={weeklyProductsData} />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Stock Levels */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Stock Levels
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {recent.map((product, key) => {
+                const quantity = Number(product.quantity ?? 0);
+                const threshold = Number(product.lowStockAt ?? 5);
+                const stockLevel =
+                  quantity === 0 ? 0 : quantity <= threshold ? 1 : 2;
+
+                const bgColors = [
+                  "bg-red-600",
+                  "bg-yellow-600",
+                  "bg-green-600",
+                ];
+                const textColors = [
+                  "text-red-600",
+                  "text-yellow-600",
+                  "text-green-600",
+                ];
+
+                return (
+                  <div
+                    key={key}
+                    className="flex items-center justify-between p-3 rounded-lg bg-gray-50"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className={`w-3 h-3 rounded-full ${bgColors[stockLevel]}`}
+                      />
+                      <span className="text-sm font-medium text-gray-900">
+                        {product.name}
+                      </span>
+                    </div>
+                    <div
+                      className={`text-sm font-medium ${textColors[stockLevel]}`}
+                    >
+                      {quantity} units
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Efficiency */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Efficiency
+              </h2>
+            </div>
+            <div className="flex items-center justify-center">
+              <div className="relative w-48 h-48">
+                <div className="absolute inset-0 rounded-full border-8 border-gray-200" />
+                <div
+                  className="absolute inset-0 rounded-full border-8 border-purple-600"
+                  style={{
+                    clipPath:
+                      "polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%)",
+                  }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-gray-900">
+                      {inStockPercentage}%
+                    </div>
+                    <div className="text-sm text-gray-600">In Stock</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 space-y-2">
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-purple-200" />
+                  <span>In Stock ({inStockPercentage}%)</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-purple-600" />
+                  <span>Low Stock ({lowStockPercentage}%)</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-gray-200" />
+                  <span>Out of Stock ({outOfStockPercentage}%)</span>
                 </div>
               </div>
             </div>
