@@ -1,8 +1,9 @@
+import ProductsChart from "@/component/product-chart";
 import { getCurrentUser } from "@/lib/auth/server";
 import { db } from "@/src/prisma/db";
 import { TrendingUp } from "lucide-react";
 
-function ProductsChart({ data }: { data: { label: string; value: number }[] }) {
+/*function ProductsChart({ data }: { data: { label: string; value: number }[] }) {
   const maxValue = Math.max(...data.map((point) => point.value), 1);
 
   return (
@@ -23,7 +24,7 @@ function ProductsChart({ data }: { data: { label: string; value: number }[] }) {
       ))}
     </div>
   );
-}
+}*/
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -49,12 +50,6 @@ export default async function DashboardPage() {
 
   const totalProducts = totalProductsRows.length;
   const lowStock = lowStockRows.length;
-  const recent = [...allProducts]
-    .sort(
-      (a: any, b: any) =>
-        Number(new Date(b.createdAt || 0)) - Number(new Date(a.createdAt || 0)),
-    )
-    .slice(0, 5);
 
   const totalValue = allProducts.reduce(
     (
@@ -67,7 +62,7 @@ export default async function DashboardPage() {
     0,
   );
 
-  const weeklyProductsData = Array.from({ length: 6 }, (_, index) => {
+  /*const weeklyProductsData = Array.from({ length: 6 }, (_, index) => {
     const now = new Date();
     const labelDate = new Date(now);
     labelDate.setDate(now.getDate() - (5 - index) * 7);
@@ -90,7 +85,7 @@ export default async function DashboardPage() {
     }).length;
 
     return { label, value };
-  });
+  });*/
 
   const inStockCount = allProducts.filter(
     (product: any) =>
@@ -115,6 +110,40 @@ export default async function DashboardPage() {
   const outOfStockPercentage = totalProducts
     ? Math.round((outOfStockCount / totalProducts) * 100)
     : 0;
+
+  const now = new Date();
+
+  const weeklyProductsData = [];
+
+  for (let i = 11; i >= 0; i--) {
+    const weekStart = new Date(now);
+    weekStart.setDate(weekStart.getDate() - i * 7);
+    weekStart.setHours(0, 0, 0, 0);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 7);
+    weekEnd.setHours(23, 59, 59, 999);
+
+    const weekLabel = `${String(weekStart.getMonth() + 1).padStart(2, "0")}/${String(weekStart.getDate() + 1).padStart(2, "0")}`;
+
+    const weekProduct = allProducts.filter(
+      (product: { createdAt: string | number | Date }) => {
+        const productDate = new Date(product.createdAt);
+        return productDate >= weekStart && productDate <= weekEnd;
+      },
+    );
+
+    weeklyProductsData.push({ week: weekLabel, products: weekProduct.length });
+  }
+
+  const recent = [...allProducts]
+    .sort(
+      (a: any, b: any) =>
+        Number(new Date(b.createdAt || 0)) - Number(new Date(a.createdAt || 0)),
+    )
+    .slice(0, 5);
+
+  console.log(totalValue);
 
   return (
     <div>
