@@ -39,31 +39,6 @@ export default async function DashboardPage() {
     0,
   );
 
-  /*const weeklyProductsData = Array.from({ length: 6 }, (_, index) => {
-    const now = new Date();
-    const labelDate = new Date(now);
-    labelDate.setDate(now.getDate() - (5 - index) * 7);
-
-    const label = labelDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-    const value = allProducts.filter((product: any) => {
-      const createdAt = product.createdAt ? new Date(product.createdAt) : null;
-      if (!createdAt) return false;
-
-      const start = new Date(labelDate);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(labelDate);
-      end.setDate(end.getDate() + 7);
-      end.setHours(23, 59, 59, 999);
-
-      return createdAt >= start && createdAt <= end;
-    }).length;
-
-    return { label, value };
-  });*/
-
   const inStockCount = allProducts.filter(
     (product: any) =>
       Number(product.quantity) > 0 &&
@@ -132,10 +107,12 @@ export default async function DashboardPage() {
               <h1 className="text-2xl font-semibold text-gray-900 mb-5">
                 Dashboard
               </h1>
-              <p className="text-base font-semibold text-gray-500">
+              <p className="text-sm text-gray-500">
                 Welcome back,{" "}
-                <span className="text-violet-600">{user?.name}</span>! Here is
-                an overview of your inventory.
+                <span className="text-violet-600 font-semibold">
+                  {user?.name}
+                </span>
+                ! Here is an overview of your inventory.
               </p>
             </div>
           </div>
