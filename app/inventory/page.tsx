@@ -1,17 +1,43 @@
 import DeleteProductButton from "@/component/delete-product-button";
+import Pagination from "@/component/pagination";
 import Sidebar from "@/component/sidebar";
 import { getCurrentUser } from "@/lib/auth/server";
 import { db } from "@/src/prisma/db";
 
-export default async function InventoryPage({}) {
+export default async function InventoryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
   const user = await getCurrentUser();
   const userId = user!.id; // layout guarantees this exists
 
+  const params = await searchParams;
+  const q = (params.q ?? "").trim();
+  const page = Math.max(1, Number(params.page ?? 1));
+  const pageSize = 10;
+
   const ProductModel = db.orm.public.Product as any;
 
-  const products = await ProductModel.where((p: any) => p.userId.eq(userId))
-    .select("id", "name", "sku", "price", "quantity", "lowStockAt")
-    .all();
+  let query = ProductModel.where((p: any) => p.userId.eq(userId));
+
+  if (q) {
+    query = query.where((p: any) => p.name.ilike(`%${q}%`));
+  }
+
+  const [totalCountRows, products] = await Promise.all([
+    query.select("id").all(),
+
+    query
+      .orderBy((p: any) => p.createdAt.desc())
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
+      .select("id", "name", "sku", "price", "quantity", "lowStockAt")
+      .all(),
+  ]);
+
+  const totalCount = totalCountRows.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   return (
     <div className="min-h-screen  bg-violet-50">
@@ -31,6 +57,20 @@ export default async function InventoryPage({}) {
         </div>
 
         <div className="space-y-6">
+          {/* Search */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <form className="flex gap-2" action="/inventory" method="GET">
+              <input
+                name="q"
+                placeholder="Search products..."
+                className="flex-1 px-4 py-2 border border-gray-300 bg-gray-50 text-sm text-gray-600 rounded-lg focus:border-transparent"
+              />
+              <button className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700">
+                Search
+              </button>
+            </form>
+          </div>
+
           {/* Products Table */}
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
             <table className="w-full">
@@ -86,6 +126,17 @@ export default async function InventoryPage({}) {
               </tbody>
             </table>
           </div>
+
+          {totalPages > 1 && (
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                baseUrl="/inventory"
+                searchParams={{ q, pageSize: String(pageSize) }}
+              />
+            </div>
+          )}
         </div>
       </main>
     </div>
