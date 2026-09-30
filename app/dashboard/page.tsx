@@ -3,29 +3,6 @@ import { getCurrentUser } from "@/lib/auth/server";
 import { db } from "@/src/prisma/db";
 import { TrendingUp } from "lucide-react";
 
-/*function ProductsChart({ data }: { data: { label: string; value: number }[] }) {
-  const maxValue = Math.max(...data.map((point) => point.value), 1);
-
-  return (
-    <div className="flex h-full items-end gap-3">
-      {data.map((point) => (
-        <div
-          key={point.label}
-          className="flex flex-1 flex-col items-center gap-2"
-        >
-          <div className="flex h-32 w-full items-end justify-center">
-            <div
-              className="w-full rounded-t-md bg-violet-500"
-              style={{ height: `${(point.value / maxValue) * 100}%` }}
-            />
-          </div>
-          <span className="text-xs text-gray-500">{point.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-}*/
-
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const userId = user!.id; // layout guarantees this exists
@@ -278,14 +255,54 @@ export default async function DashboardPage() {
             </div>
             <div className="flex items-center justify-center">
               <div className="relative w-48 h-48">
-                <div className="absolute inset-0 rounded-full border-8 border-gray-200" />
-                <div
-                  className="absolute inset-0 rounded-full border-8 border-purple-600"
-                  style={{
-                    clipPath:
-                      "polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%)",
-                  }}
-                />
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                  {/* background track */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#e5e7eb"
+                    strokeWidth="10"
+                  />
+                  {/* out of stock segment */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#9333ea"
+                    strokeWidth="10"
+                    strokeDasharray={`${(outOfStockPercentage / 100) * 251.2} 251.2`}
+                    strokeDashoffset={
+                      -((inStockPercentage + lowStockPercentage) / 100) * 251.2
+                    }
+                    strokeLinecap="round"
+                  />
+                  {/* low stock segment */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#c4b5fd"
+                    strokeWidth="10"
+                    strokeDasharray={`${(lowStockPercentage / 100) * 251.2} 251.2`}
+                    strokeDashoffset={-(inStockPercentage / 100) * 251.2}
+                    strokeLinecap="round"
+                  />
+                  {/* in stock segment */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#7c3aed"
+                    strokeWidth="10"
+                    strokeDasharray={`${(inStockPercentage / 100) * 251.2} 251.2`}
+                    strokeLinecap="round"
+                  />
+                </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-900">
@@ -299,13 +316,13 @@ export default async function DashboardPage() {
             <div className="mt-6 space-y-2">
               <div className="flex items-center justify-between text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-purple-200" />
+                  <div className="w-3 h-3 rounded-full bg-violet-600" />
                   <span>In Stock ({inStockPercentage}%)</span>
                 </div>
               </div>
               <div className="flex items-center justify-between text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-purple-600" />
+                  <div className="w-3 h-3 rounded-full bg-violet-300" />
                   <span>Low Stock ({lowStockPercentage}%)</span>
                 </div>
               </div>
