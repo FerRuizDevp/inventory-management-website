@@ -17,7 +17,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-linear-to-br from-violet-50 to-violet-100">
-      <Sidebar currentPath="/dashboard" />
+      <Sidebar />
       <main className="ml-64 p-8">{children}</main>
     </div>
   );

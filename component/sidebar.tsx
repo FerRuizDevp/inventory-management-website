@@ -1,3 +1,6 @@
+// component/sidebar.tsx
+"use client";
+
 import { UserButton } from "@neondatabase/auth/react";
 import {
   CirclePile,
@@ -7,17 +10,16 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-export default function Sidebar({
-  currentPath = "/dashboard",
-}: {
-  currentPath: string;
-}) {
+export default function Sidebar() {
+  const pathname = usePathname();
+
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Inventory", href: "/inventory", icon: Package },
-    { name: "Add Product", href: "/add-product", icon: PlusCircle },
-    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Inventory", href: "/dashboard/inventory", icon: Package },
+    { name: "Add Product", href: "/dashboard/add-product", icon: PlusCircle },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ];
 
   return (
@@ -31,7 +33,7 @@ export default function Sidebar({
       <nav className="space-y-1">
         {navigation.map((item, key) => {
           const Iconcomponent = item.icon;
-          const isActive = currentPath === item.href;
+          const isActive = pathname === item.href;
           return (
             <Link
               href={item.href}
