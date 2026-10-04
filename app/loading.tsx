@@ -12,6 +12,7 @@ function Skeleton({ className = "" }: { className?: string }) {
 }
 
 // Sidebar component for loading state
+/*
 function LoadingSidebar() {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
@@ -54,14 +55,13 @@ function LoadingSidebar() {
             <Skeleton className="h-4 w-16 mb-1" />
             <Skeleton className="h-3 w-24" />
           </div>
-          <div className="ml-3">
-            {/*<UserButton />*/}
+          <div className="ml-3">{/*<UserButton />
           </div>
         </div>
       </div>
     </div>
   );
-}
+}*/
 
 // Main content skeleton
 function MainContentSkeleton({
@@ -158,7 +158,7 @@ export default function Loading() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {showSidebar && <LoadingSidebar />}
+      {/*{showSidebar && <LoadingSidebar />}*/}
       <MainContentSkeleton showSidebar={showSidebar} />
     </div>
   );
