@@ -1,20 +1,14 @@
-import { auth } from '@/lib/auth/server';
-import Link from 'next/link';
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth/server";
+import Link from "next/link";
 
-// Server components using auth methods must be rendered dynamically
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const { data: session } = await auth.getSession();
 
   if (session?.user) {
-    return (
-      <div className="min-h-screen bg-linear-to-br from-violet-50 to-violet-100 flex items-center justify-center">
-        <h1 className="mb-4 text-4xl text-violet-950">
-          Logged in as <span className="font-bold underline">{session.user.name}</span>
-        </h1>
-      </div>
-    );
+    redirect("/dashboard");
   }
 
   return (
@@ -42,19 +36,9 @@ export default async function Home() {
             >
               Sign In
             </Link>
-            <Link
-              href="#"
-              className="bg-white text-violet-600 px-8 py-3 rounded-lg font-semibold border-2 border-violet-600 hover:bg-violet-50 transition-colors"
-            >
-              Learn More
-            </Link>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-// ** This page is a server component that checks if the user is logged in using the auth library. If the user is logged in, it displays their name. If not, it shows a landing page with options to sign up, sign in, or learn more about the inventory management system.
-
-// ** TO-DO: Adaprt the Sign-up and Sign-in pages to have the same styling as the landing page. 
