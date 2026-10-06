@@ -2,7 +2,7 @@
 {
   "title": "Inventory Management System",
   "description": "A full-stack inventory management app with a real-time dashboard, product CRUD, search and pagination, and secure authentication. Built with Next.js, TypeScript, PostgreSQL, and Prisma.",
-  "imagePreview": "https://github.com/user-attachments/assets/85cecf34-dd52-4082-9063-3f2fd47ed641",
+  "imagePreview": "https://github.com/user-attachments/assets/749b10dc-068c-409a-a10f-5530e10e0bb0",
   "githubLink": "https://github.com/FerRuizDevp/inventory-management-website",
   "liveLink": "https://inventory-management-website-five.vercel.app",
   "tags": ["all-projects", "React", "Typescript", "Nextjs", "PostgreSQL", "Tailwind"]
