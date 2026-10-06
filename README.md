@@ -9,11 +9,11 @@
 }
 -->
 
-# Inventory Management System
+# 📦 Inventory Management System
 
 A full-stack inventory management app built with Next.js, letting users track products, monitor stock levels, and manage inventory through a real-time dashboard.
 
-**Live demo:** [inventory-management-website-five.vercel.app](https://inventory-management-website-five.vercel.app)
+🔗 **Live demo:** [inventory-management-website-five.vercel.app](https://inventory-management-website-five.vercel.app)
 
 ## Screenshots
 
