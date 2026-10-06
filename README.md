@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<!-- PROJECT_METADATA
+{
+  "title": "Inventory Management System",
+  "description": "A full-stack inventory management app with a real-time dashboard, product CRUD, search and pagination, and secure authentication. Built with Next.js, TypeScript, PostgreSQL, and Prisma.",
+  "imagePreview": "https://github.com/user-attachments/assets/85cecf34-dd52-4082-9063-3f2fd47ed641",
+  "githubLink": "https://github.com/FerRuizDevp/inventory-management-website",
+  "liveLink": "https://inventory-management-website-five.vercel.app",
+  "tags": ["all-projects", "React", "Typescript", "Nextjs", "PostgreSQL", "Tailwind"]
+}
+-->
+
+# Inventory Management System
+
+A full-stack inventory management app built with Next.js, letting users track products, monitor stock levels, and manage inventory through a real-time dashboard.
+
+**Live demo:** [inventory-management-website-five.vercel.app](https://inventory-management-website-five.vercel.app)
+
+## Screenshots
+
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
+
+### Inventory
+![Inventory](./screenshots/inventory.png)
+
+### Add Product
+![Add Product](./screenshots/add-product.png)
+
+## Features
+
+- **Dashboard** — key metrics (total products, inventory value, low-stock count), a weekly new-products chart, and a stock-level breakdown ring, all built with Recharts and SVG
+- **Inventory management** — full CRUD: add products, search by name, paginate large lists, and delete with a confirmation modal
+- **Authentication** — secure sign-up/sign-in via email/password or GitHub OAuth, powered by Neon's managed Better Auth
+- **Account settings** — editable user profile
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router, Server Components, Server Actions)
+- **Database:** PostgreSQL on Neon
+- **ORM:** Prisma 8
+- **Auth:** Neon Managed Better Auth
+- **Styling:** Tailwind CSS
+- **Charts:** Recharts
+- **Validation:** Zod
+- **Deployment:** Vercel
 
 ## Getting Started
 
-First, run the development server:
+```bash
+git clone https://github.com/FerRuizDevp/inventory-management-website.git
+cd inventory-management-website
+npm install
+```
+
+Create a `.env` file with:
+
+```
+DATABASE_URL=
+NEON_AUTH_BASE_URL=
+NEON_AUTH_COOKIE_SECRET=
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Author
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Fernanda Ruiz** ([@FerRuizDevp](https://github.com/FerRuizDevp))
